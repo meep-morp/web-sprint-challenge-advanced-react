@@ -6,10 +6,13 @@ import ShoppingCart from "./components/ShoppingCart";
 import CheckoutForm from "./components/CheckoutForm";
 
 import "./App.css";
+import { useEffect } from "react";
+import {useDarkMode} from "./hooks/useDarkMode";
 
 function App() {
   // array of plants that have been added to the cart
   const [cart, setCart] = useState([]);
+  const [darkModeState, setDarkModeState, toggleMode] = useDarkMode(true);
 
   // add a plant to the cart
   const addToCart = (plant) => {
@@ -21,6 +24,17 @@ function App() {
     setCart(cart.filter((p) => p.id !== plant.id));
   };
 
+  useEffect(() => {
+    const body = document.querySelector("body");
+
+    if(darkModeState) {
+      body.classList.remove("lightMode");
+    } else {
+      body.classList.add("lightMode");
+    }
+
+  }, [darkModeState]);
+
   return (
     <div>
       <Router>
@@ -28,6 +42,7 @@ function App() {
           <h1>
             React Plants <span role="img">🌿</span>
           </h1>
+          <input type="checkbox" className="toggle" name="darkMode" onChange={toggleMode} />
           <ul className="steps">
             <li>
               <NavLink exact to="/">
